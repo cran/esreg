@@ -2,7 +2,7 @@
 % Please edit documentation in R/loss_functions.R
 \name{gpl}
 \alias{gpl}
-\title{Generalized piecewise linear loss function}
+\title{Generalized Piecewise Linear Loss Function}
 \usage{
 gpl(r, q, alpha, g = function(x) x, return_mean = TRUE)
 }

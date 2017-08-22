@@ -1,6 +1,7 @@
 #include <RcppArmadillo.h>
 // [[Rcpp::depends(RcppArmadillo)]]
 
+//' @keywords internal
 // [[Rcpp::export]]
 Rcpp::NumericMatrix stationary_bootstrap_indices(int n, double avg_block_size, int B) {
   Rcpp::NumericMatrix indices(n, B);

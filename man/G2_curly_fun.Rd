@@ -21,3 +21,4 @@ G2_curly_fun(z, type)
 \description{
 G2_curly
 }
+\keyword{internal}

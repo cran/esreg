@@ -2,7 +2,7 @@
 % Please edit documentation in R/esreg.R
 \name{esreg}
 \alias{esreg}
-\title{Joint (VaR, ES) Regression}
+\title{Joint Quantile and Expected Shortfall Regression}
 \usage{
 esreg(formula, data, alpha, g1 = 2L, g2 = 1L, target = "rho",
   shift_data = TRUE, method = "ils", control = list(terminate_after = 10,
@@ -16,24 +16,25 @@ If missing the data is extracted from the environment.}
 
 \item{alpha}{Probability level}
 
-\item{g1}{1, [2] (see \link{G1_fun}, \link{G1_prime_fun})}
+\item{g1}{1, 2 (see \link{G1_fun}, \link{G1_prime_fun}). Default is 1.}
 
-\item{g2}{[1], 2, 3, 4, 5 (see \link{G2_curly_fun}, \link{G2_fun}, \link{G2_prime_fun})}
+\item{g2}{1, 2, 3, 4, 5 (see \link{G2_curly_fun}, \link{G2_fun}, \link{G2_prime_fun}). Default is 2.}
 
-\item{target}{The functions to be optimized: either the loss [rho] or the identification function (psi).
-Optimization of the rho function is strongly recommended.}
+\item{target}{The functions to be optimized: either the loss (rho) or the moment function (psi).
+Optimization of the loss function is strongly recommended.}
 
 \item{shift_data}{If g2 is 1, 2 or 3, we can either estimate the model without or with
 shifting of the Y variable. We either risk biased estimates (no shifting) or slightly different estimates due
 to the changed loss function (shifting). Defaults to shifting to avoid biased estimates.}
 
-\item{method}{iterated local search [ils] or simulated annealing (sa)}
+\item{method}{Iterated local search (ils) or Simulated annealing (sa).
+Defaults to ils for reasons of computation speed.}
 
 \item{control}{A list with control parameters passed to either the ils or sa:
 \itemize{
-  \item terminate_after: Stop the iterated local search if there is no improvement within max_step consecutive steps
-  \item max.time: Maximum running time of the sa optimizer
-  \item box: Box around the parameters for the sa optimizer
+  \item terminate_after - Stop the iterated local search if there is no improvement within max_step consecutive steps. Default is 10.
+  \item max.time - Maximum running time of the sa optimizer.
+  \item box - Box around the parameters for the sa optimizer.
 }}
 }
 \value{

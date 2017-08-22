@@ -18,3 +18,4 @@ G1_fun(z, type)
 \description{
 G1
 }
+\keyword{internal}

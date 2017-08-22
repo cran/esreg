@@ -21,3 +21,4 @@ G2_prime_fun(z, type)
 \description{
 G2_prime
 }
+\keyword{internal}

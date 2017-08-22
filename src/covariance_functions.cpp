@@ -1,6 +1,7 @@
 #include <RcppArmadillo.h>
 // [[Rcpp::depends(RcppArmadillo)]]
 
+//' @keywords internal
 // [[Rcpp::export]]
 arma::mat l_esreg_covariance(arma::mat x, arma::colvec xq, arma::colvec xe,
                              arma::colvec G1_prime_xq, arma::colvec G2_xe, arma::colvec G2_prime_xe,
@@ -52,6 +53,7 @@ arma::mat l_esreg_covariance(arma::mat x, arma::colvec xq, arma::colvec xe,
 }
 
 
+//' @keywords internal
 // [[Rcpp::export]]
 arma::mat l_esreg_twostep_covariance(arma::mat x, arma::colvec xq, arma::colvec xe,
                                      arma::colvec density, arma::colvec conditional_variance, double alpha) {

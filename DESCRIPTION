@@ -1,8 +1,8 @@
 Package: esreg
 Type: Package
 Title: Joint Quantile and Expected Shortfall Regression
-Version: 0.3.0
-Date: 2017-08-17
+Version: 0.3.1
+Date: 2017-08-22
 Authors@R: c(person('Sebastian', 'Bayer', email='sebastian.bayer@uni-konstanz.de', role=c('aut', 'cre')), 
              person('Timo', 'Dimitriadis', role='aut'))
 Description: 
@@ -16,9 +16,9 @@ Suggests: GenSA
 LinkingTo: Rcpp, RcppArmadillo
 RoxygenNote: 6.0.1
 NeedsCompilation: yes
-Packaged: 2017-08-17 14:35:04 UTC; bayerse
+Packaged: 2017-08-22 16:39:38 UTC; bayerse
 Author: Sebastian Bayer [aut, cre],
   Timo Dimitriadis [aut]
 Maintainer: Sebastian Bayer <sebastian.bayer@uni-konstanz.de>
 Repository: CRAN
-Date/Publication: 2017-08-17 17:29:45 UTC
+Date/Publication: 2017-08-22 16:53:35 UTC

@@ -21,3 +21,4 @@ G2_fun(z, type)
 \description{
 G2
 }
+\keyword{internal}

@@ -1,4 +1,4 @@
-#' @title Two Step (VaR, ES) Regression
+#' @title Two Step Quantile and Expected Shortfall Regression
 #' @description Estimates the expected shortfall in two steps. First a linear quantile regression,
 #' then a weighted least squares regression (see the Oracle estimator in the references for a brief explanation).
 #' This estimator is much faster than the joint estimator \code{\link{esreg}}.
@@ -80,7 +80,7 @@ print.esreg_twostep <- print.esreg
 #' @export
 fitted.esreg_twostep <- fitted.esreg
 
-#' @title Estimated covariance of the two-step (VaR, ES) estimator
+#' @title Covariance Estimation for esreg_twostep
 #' @description Estimate the variance-covariance matrix of the joint (VaR, ES) estimator
 #' either using the asymptotic formulas or using the bootstrap.
 #' @inheritParams vcov.esreg
@@ -171,6 +171,7 @@ vcov.esreg_twostep <- function(object, sparsity = "iid", cond_var = "ind", bandw
 #' @description Summarize details about the regression estimates.
 #' @param object An esreg_twostep object
 #' @param ... Accepts all parameters you can pass to \code{\link{vcov.esreg_twostep}}.
+#' @keywords internal
 #' @export
 summary.esreg_twostep <- function(object, ...) {
   fit <- object

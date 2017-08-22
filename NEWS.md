@@ -1,3 +1,6 @@
+# 0.3.1
+Fixed an overloaded ‘pow(int&, int)’ bug (Solaris), improved the help files and marked several functions as internal.
+
 # 0.3.0
 Bump version for CRAN release
 

@@ -14,3 +14,4 @@
 \description{
 Summarize details about the regression estimates.
 }
+\keyword{internal}

@@ -1,4 +1,4 @@
-#' @title Joint (VaR, ES) loss function
+#' @title Joint Quantile and Expected Shortfall Loss Function
 #' @description Computes the joint (VaR, ES) loss
 #' @param r Vector of returns
 #' @param q Vector of quantiles
@@ -25,7 +25,7 @@ esr_loss <- function(r, q, e, alpha, g1 = 2L, g2 = 1L, return_mean = TRUE) {
   }
 }
 
-#' @title Generalized piecewise linear loss function
+#' @title Generalized Piecewise Linear Loss Function
 #' @description Equivalent to the tick / check loss when g is the identity function.
 #' @param r Vector of returns
 #' @param q Vector of quantiles

@@ -15,4 +15,12 @@ conditional_truncated_variance(y, x, approach)
 }
 \description{
 Estimate the variance of y given x and given y <= 0.
+If approach is:
+\enumerate{
+  \item ind -  Variance of all y where y <= 0.
+  \item scl_N or scl_sp - Assumes a location-scale model:
+  y = x'b + (x'g)e. First, it estimates b and g using PMLE.
+  Then, it computes the conditional truncated variance by integrating the truncated density of y.
 }
+}
+\keyword{internal}

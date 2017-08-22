@@ -23,5 +23,7 @@ density_quantile_function(y, x, u, alpha, sparsity, bandwidth_type)
 Estimate the density quantile function
 }
 \references{
-Bofinger (1975), Chamberlain (1994), Hall and Sheather(1988)
+For the iid and nid method, see Koenker (1994), and Hendricks and Koenker (1992).
+For the bandwidth types, see Bofinger (1975), Chamberlain (1994), and Hall and Sheather(1988).
 }
+\keyword{internal}

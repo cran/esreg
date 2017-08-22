@@ -6,7 +6,10 @@
 #' @param alpha Probability level
 #' @param sparsity iid or ind
 #' @param bandwidth_type Bofinger, Chamberlain or Hall-Sheather
-#' @references Bofinger (1975), Chamberlain (1994), Hall and Sheather(1988)
+#' @references
+#' For the iid and nid method, see Koenker (1994), and Hendricks and Koenker (1992).
+#' For the bandwidth types, see Bofinger (1975), Chamberlain (1994), and Hall and Sheather(1988).
+#' @keywords internal
 #' @export
 density_quantile_function <- function(y, x, u, alpha, sparsity, bandwidth_type) {
   n <- nrow(x)
@@ -49,9 +52,17 @@ density_quantile_function <- function(y, x, u, alpha, sparsity, bandwidth_type) 
 
 #' @title Conditional truncated variance
 #' @description Estimate the variance of y given x and given y <= 0.
+#' If approach is:
+#' \enumerate{
+#'   \item ind -  Variance of all y where y <= 0.
+#'   \item scl_N or scl_sp - Assumes a location-scale model:
+#'   y = x'b + (x'g)e. First, it estimates b and g using PMLE.
+#'   Then, it computes the conditional truncated variance by integrating the truncated density of y.
+#' }
 #' @param y Vector of dependent data
 #' @param x Matrix of covariates including the intercept
 #' @param approach ind, scl_N or scl_sp
+#' @keywords internal
 #' @export
 conditional_truncated_variance <- function(y, x, approach) {
   if (sum(y <= 0) <= 2) {

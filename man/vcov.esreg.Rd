@@ -2,7 +2,7 @@
 % Please edit documentation in R/esreg.R
 \name{vcov.esreg}
 \alias{vcov.esreg}
-\title{Covariance of the joint (VaR, ES) estimator}
+\title{Covariance Estimation for esreg}
 \usage{
 \method{vcov}{esreg}(object, sparsity = "iid", cond_var = "ind",
   bandwidth_type = "Hall-Sheather", bootstrap_method = NULL, B = 1000,
@@ -11,25 +11,28 @@
 \arguments{
 \item{object}{An esreg object}
 
-\item{sparsity}{Sparsity estimator
+\item{sparsity}{Sparsity estimator (default: iid),
+see \link{density_quantile_function} for more details.
 \itemize{
-  \item [iid] - Piecewise linear interpolation of the distribution
+  \item iid - Piecewise linear interpolation of the distribution
   \item nid - Hendricks and Koenker sandwich
 }}
 
-\item{cond_var}{Conditional truncated variance estimator
+\item{cond_var}{Conditional truncated variance estimator (default: ind),
+see \link{conditional_truncated_variance} for more details.
 \itemize{
-  \item [ind] Variance over all negative residuals
-  \item scl_N Scaling with the normal distribution
-  \item scl_sp Scaling with the kernel density function
+  \item ind - Variance over all negative residuals
+  \item scl_N - Scaling with the normal distribution
+  \item scl_sp - Scaling with the kernel density function
 }}
 
 \item{bandwidth_type}{Bofinger, Chamberlain or Hall-Sheather}
 
-\item{bootstrap_method}{\itemize{
-  \item [NULL] Use the asymptotic estimator
-  \item iid bootstrap
-  \item stationary bootstrap (Politis & Romano, 1994)
+\item{bootstrap_method}{(default: NULL)
+\itemize{
+  \item NULL - Use the asymptotic estimator
+  \item iid - Apply the iid bootstrap (Efron, 1979)
+  \item stationary - Apply the stationary bootstrap (Politis & Romano, 1994)
 }}
 
 \item{B}{Number of bootstrap iterations}
@@ -39,5 +42,6 @@
 \item{...}{additional arguments}
 }
 \description{
-Estimate the variance-covariance matrix of the joint (VaR, ES) estimator either using the asymptotic formulas or using the bootstrap.
+Estimate the variance-covariance matrix of the joint (VaR, ES) estimator either
+using the asymptotic formulas or using the bootstrap.
 }

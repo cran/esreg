@@ -1,4 +1,4 @@
-#' @title Joint (VaR, ES) Regression
+#' @title Joint Quantile and Expected Shortfall Regression
 #' @description  Estimates a joint linear regression model for the pair (VaR, ES):
 #' \deqn{Q_\alpha(Y | X) = X'\beta_q}
 #' \deqn{ES_\alpha(Y | X) = X'\beta_e}
@@ -6,19 +6,20 @@
 #' @param data data.frame that holds the variables.
 #' If missing the data is extracted from the environment.
 #' @param alpha Probability level
-#' @param g1 1, [2] (see \link{G1_fun}, \link{G1_prime_fun})
-#' @param g2 [1], 2, 3, 4, 5 (see \link{G2_curly_fun}, \link{G2_fun}, \link{G2_prime_fun})
-#' @param target The functions to be optimized: either the loss [rho] or the identification function (psi).
-#' Optimization of the rho function is strongly recommended.
+#' @param g1 1, 2 (see \link{G1_fun}, \link{G1_prime_fun}). Default is 1.
+#' @param g2 1, 2, 3, 4, 5 (see \link{G2_curly_fun}, \link{G2_fun}, \link{G2_prime_fun}). Default is 2.
+#' @param target The functions to be optimized: either the loss (rho) or the moment function (psi).
+#' Optimization of the loss function is strongly recommended.
 #' @param shift_data If g2 is 1, 2 or 3, we can either estimate the model without or with
 #' shifting of the Y variable. We either risk biased estimates (no shifting) or slightly different estimates due
 #' to the changed loss function (shifting). Defaults to shifting to avoid biased estimates.
-#' @param method iterated local search [ils] or simulated annealing (sa)
+#' @param method Iterated local search (ils) or Simulated annealing (sa).
+#' Defaults to ils for reasons of computation speed.
 #' @param control A list with control parameters passed to either the ils or sa:
 #' \itemize{
-#'   \item terminate_after: Stop the iterated local search if there is no improvement within max_step consecutive steps
-#'   \item max.time: Maximum running time of the sa optimizer
-#'   \item box: Box around the parameters for the sa optimizer
+#'   \item terminate_after - Stop the iterated local search if there is no improvement within max_step consecutive steps. Default is 10.
+#'   \item max.time - Maximum running time of the sa optimizer.
+#'   \item box - Box around the parameters for the sa optimizer.
 #' }
 #' @return An esreg object
 #' @seealso \code{\link{vcov.esreg}} for the covariance estimation and
@@ -218,26 +219,29 @@ fitted.esreg <- function(object, ...) {
         object$x %*% object$coefficients_e)
 }
 
-#' @title Covariance of the joint (VaR, ES) estimator
-#' @description Estimate the variance-covariance matrix of the joint (VaR, ES) estimator either using the asymptotic formulas or using the bootstrap.
+#' @title Covariance Estimation for esreg
+#' @description Estimate the variance-covariance matrix of the joint (VaR, ES) estimator either
+#' using the asymptotic formulas or using the bootstrap.
 #' @param object An esreg object
-#' @param sparsity Sparsity estimator
+#' @param sparsity Sparsity estimator (default: iid),
+#' see \link{density_quantile_function} for more details.
 #' \itemize{
-#'   \item [iid] - Piecewise linear interpolation of the distribution
+#'   \item iid - Piecewise linear interpolation of the distribution
 #'   \item nid - Hendricks and Koenker sandwich
 #' }
-#' @param cond_var Conditional truncated variance estimator
+#' @param cond_var Conditional truncated variance estimator (default: ind),
+#' see \link{conditional_truncated_variance} for more details.
 #' \itemize{
-#'   \item [ind] Variance over all negative residuals
-#'   \item scl_N Scaling with the normal distribution
-#'   \item scl_sp Scaling with the kernel density function
+#'   \item ind - Variance over all negative residuals
+#'   \item scl_N - Scaling with the normal distribution
+#'   \item scl_sp - Scaling with the kernel density function
 #' }
 #' @param bandwidth_type Bofinger, Chamberlain or Hall-Sheather
-#' @param bootstrap_method
+#' @param bootstrap_method (default: NULL)
 #' \itemize{
-#'   \item [NULL] Use the asymptotic estimator
-#'   \item iid bootstrap
-#'   \item stationary bootstrap (Politis & Romano, 1994)
+#'   \item NULL - Use the asymptotic estimator
+#'   \item iid - Apply the iid bootstrap (Efron, 1979)
+#'   \item stationary - Apply the stationary bootstrap (Politis & Romano, 1994)
 #' }
 #' @param B Number of bootstrap iterations
 #' @param block_length Average block length for the stationary bootstrap
@@ -343,6 +347,7 @@ vcov.esreg <- function(object, sparsity = "iid", cond_var = "ind", bandwidth_typ
 #' @description Summarize details about the regression estimates.
 #' @param object An esreg object
 #' @param ... Accepts all parameters you can pass to \code{\link{vcov.esreg}}.
+#' @keywords internal
 #' @export
 summary.esreg <- function(object, ...) {
   fit <- object

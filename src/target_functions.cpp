@@ -9,6 +9,7 @@
 //'   \item 1: G1(z) = z
 //'   \item 2: G1(z) = 0
 //' }
+//' @keywords internal
 //' @export
 // [[Rcpp::export]]
 double G1_fun(double z, int type) {
@@ -32,7 +33,7 @@ double G1_fun(double z, int type) {
 //'   \item 1: G1_prime(z) = 1
 //'   \item 2: G1_prime(z) = 0
 //' }
-//' @export
+//' @keywords internal
 //' @export
 // [[Rcpp::export]]
 double G1_prime_fun(double z, int type) {
@@ -59,6 +60,7 @@ double G1_prime_fun(double z, int type) {
 //'   \item 4: log(1 + exp(z))
 //'   \item 5: exp(z)
 //' }
+//' @keywords internal
 //' @export
 // [[Rcpp::export]]
 double G2_curly_fun(double z, int type) {
@@ -97,6 +99,7 @@ double G2_curly_fun(double z, int type) {
 //'   \item 4: 1 / (1 + exp(-z))
 //'   \item 5: exp(z)
 //' }
+//' @keywords internal
 //' @export
 // [[Rcpp::export]]
 double G2_fun(double z, int type) {
@@ -135,6 +138,7 @@ double G2_fun(double z, int type) {
 //'   \item 4: exp(z) / (1 + exp(z))^2
 //'   \item 5: exp(z)
 //' }
+//' @keywords internal
 //' @export
 // [[Rcpp::export]]
 double G2_prime_fun(double z, int type) {
@@ -161,11 +165,13 @@ double G2_prime_fun(double z, int type) {
   return out;
 }
 
-//' @title Vectorized call to the G1/G2 functions
-//' @description Vectorized call to the G1/G2 functions
+//' @title Vectorized call to the G1 / G2 functions
+//' @description Vectorized call to the G1 / G2 functions
 //' @param z Vector
-//' @param g G1, G1_prime, G2_curly, G2 or G2_curly
-//' @param type G1: 1-2; G2: 1-5
+//' @param g String, either G1, G1_prime, G2_curly, G2 or G2_curly
+//' @param type Numeric, for G1: 1-2; G2: 1-5
+//' (see \link{G1_fun}, \link{G1_prime_fun}, \link{G2_curly_fun}, \link{G2_fun}, \link{G2_prime_fun})
+//' @keywords internal
 //' @export
 // [[Rcpp::export]]
 Rcpp::NumericVector G_vec(Rcpp::NumericVector z, Rcpp::String g, int type) {
@@ -189,16 +195,17 @@ Rcpp::NumericVector G_vec(Rcpp::NumericVector z, Rcpp::String g, int type) {
 
 
 //' @title Joint (VaR, ES) loss for a linear predictor
-//' @description Returns the loss at b
+//' @description Returns the loss for the parameter vector b
 //' @param b Parameter vector
 //' @param y Vector of dependent data
 //' @param x Matrix of covariates. Note: intercept needs to be added manually
-//' @param alpha Quantile of interest
+//' @param alpha Probability level
 //' @param g1 1, 2 (see \link{G1_fun})
 //' @param g2 1, 2, 3, 4, 5 (see \link{G2_curly_fun}, \link{G2_fun})
-//' @param delta Approximation of the indicator function (0 is the indicator function)
+//' @param delta Smooth approximation of the indicator function (0 is the indicator function)
 //' @importFrom Rcpp sourceCpp
 //' @useDynLib esreg
+//' @keywords internal
 //' @export
 // [[Rcpp::export]]
 double esr_rho_lp(const arma::colvec& b, const arma::colvec& y, const arma::mat& x,
@@ -237,17 +244,20 @@ double esr_rho_lp(const arma::colvec& b, const arma::colvec& y, const arma::mat&
 }
 
 
-//' @title Identification function for the pair (VaR, ES) for a linear predictor
-//' @description Returns psi' * psi.
+//' @title Identification (moment) function for the pair (VaR, ES) for a linear predictor
+//' @description Returns the inner product psi' * psi of the moment function
+//' for the parameter vector b
 //' @param b Parameter vector
 //' @param y Vector of dependent data
 //' @param x Matrix of covariates. Note: intercept needs to be added manually
-//' @param alpha Quantile of interest
+//' @param alpha Probability level
 //' @param g1 1, 2 (see \link{G1_prime_fun})
 //' @param g2 1, 2, 3, 4, 5 (see \link{G2_fun}, \link{G2_prime_fun})
-//' @param delta Approximation of the indicator function (0 is the indicator function)
+//' @param delta Smooth approximation of the indicator function
+//' (the default value 0 is the indicator function)
 //' @importFrom Rcpp sourceCpp
 //' @useDynLib esreg
+//' @keywords internal
 //' @export
 // [[Rcpp::export]]
 double esr_psi_lp(const arma::colvec& b, const arma::colvec& y, const arma::mat& x,
@@ -284,7 +294,7 @@ double esr_psi_lp(const arma::colvec& b, const arma::colvec& y, const arma::mat&
     psi.subvec(k, 2*k-1) += xi * G2_prime_fun(xe, g2) * (xe - xq + (xq - yi) * h / alpha);
   }
   // Compute the inner product
-  double out = as_scalar(psi.t() * psi) / pow(n, 2);
+  double out = as_scalar(psi.t() * psi) / (n*n);
 
   return out;
 }

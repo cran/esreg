@@ -18,3 +18,4 @@ G1_prime_fun(z, type)
 \description{
 G1_prime
 }
+\keyword{internal}

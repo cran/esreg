@@ -2,7 +2,7 @@
 % Please edit documentation in R/esreg_twostep.R
 \name{esreg_twostep}
 \alias{esreg_twostep}
-\title{Two Step (VaR, ES) Regression}
+\title{Two Step Quantile and Expected Shortfall Regression}
 \usage{
 esreg_twostep(formula, data, alpha)
 }
