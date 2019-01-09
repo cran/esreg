@@ -2,18 +2,8 @@
 # Generator token: 10BE3573-1514-4C36-9D1C-5A225CD40393
 
 #' @keywords internal
-l_esreg_covariance <- function(x, xq, xe, G1_prime_xq, G2_xe, G2_prime_xe, density, conditional_variance, alpha) {
-    .Call('_esreg_l_esreg_covariance', PACKAGE = 'esreg', x, xq, xe, G1_prime_xq, G2_xe, G2_prime_xe, density, conditional_variance, alpha)
-}
-
-#' @keywords internal
-l_esreg_twostep_covariance <- function(x, xq, xe, density, conditional_variance, alpha) {
-    .Call('_esreg_l_esreg_twostep_covariance', PACKAGE = 'esreg', x, xq, xe, density, conditional_variance, alpha)
-}
-
-#' @keywords internal
-stationary_bootstrap_indices <- function(n, avg_block_size, B) {
-    .Call('_esreg_stationary_bootstrap_indices', PACKAGE = 'esreg', n, avg_block_size, B)
+l_esreg_covariance <- function(xq, xe, xbq, xbe, G1_prime_xq, G2_xe, G2_prime_xe, density, conditional_variance, alpha) {
+    .Call('_esreg_l_esreg_covariance', PACKAGE = 'esreg', xq, xe, xbq, xbe, G1_prime_xq, G2_xe, G2_prime_xe, density, conditional_variance, alpha)
 }
 
 #' @title Specification Function
@@ -111,35 +101,16 @@ G_vec <- function(z, g, type) {
 #' @description Returns the loss for the parameter vector b
 #' @param b Parameter vector
 #' @param y Vector of dependent data
-#' @param x Matrix of covariates. Note: intercept needs to be added manually
+#' @param xq Matrix of covariates for the quantile part
+#' @param xe Matrix of covariates for the expected shortfall part
 #' @param alpha Probability level
 #' @param g1 1, 2 (see \link{G1_fun})
 #' @param g2 1, 2, 3, 4, 5 (see \link{G2_curly_fun}, \link{G2_fun})
-#' @param delta Smooth approximation of the indicator function (0 is the indicator function)
 #' @importFrom Rcpp sourceCpp
 #' @useDynLib esreg
 #' @keywords internal
 #' @export
-esr_rho_lp <- function(b, y, x, alpha, g1 = 2L, g2 = 1L, delta = 0) {
-    .Call('_esreg_esr_rho_lp', PACKAGE = 'esreg', b, y, x, alpha, g1, g2, delta)
-}
-
-#' @title Identification (moment) function for the pair (VaR, ES) for a linear predictor
-#' @description Returns the inner product psi' * psi of the moment function
-#' for the parameter vector b
-#' @param b Parameter vector
-#' @param y Vector of dependent data
-#' @param x Matrix of covariates. Note: intercept needs to be added manually
-#' @param alpha Probability level
-#' @param g1 1, 2 (see \link{G1_prime_fun})
-#' @param g2 1, 2, 3, 4, 5 (see \link{G2_fun}, \link{G2_prime_fun})
-#' @param delta Smooth approximation of the indicator function
-#' (the default value 0 is the indicator function)
-#' @importFrom Rcpp sourceCpp
-#' @useDynLib esreg
-#' @keywords internal
-#' @export
-esr_psi_lp <- function(b, y, x, alpha, g1 = 2L, g2 = 1L, delta = 0) {
-    .Call('_esreg_esr_psi_lp', PACKAGE = 'esreg', b, y, x, alpha, g1, g2, delta)
+esr_rho_lp <- function(b, y, xq, xe, alpha, g1 = 2L, g2 = 1L) {
+    .Call('_esreg_esr_rho_lp', PACKAGE = 'esreg', b, y, xq, xe, alpha, g1, g2)
 }
 

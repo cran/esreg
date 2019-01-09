@@ -2,7 +2,7 @@
 % Please edit documentation in R/loss_functions.R
 \name{esr_loss}
 \alias{esr_loss}
-\title{Joint Quantile and Expected Shortfall Loss Function}
+\title{Joint Loss Function}
 \usage{
 esr_loss(r, q, e, alpha, g1 = 2L, g2 = 1L, return_mean = TRUE)
 }

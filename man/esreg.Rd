@@ -2,53 +2,54 @@
 % Please edit documentation in R/esreg.R
 \name{esreg}
 \alias{esreg}
+\alias{esreg.formula}
+\alias{esreg.default}
 \title{Joint Quantile and Expected Shortfall Regression}
 \usage{
-esreg(formula, data, alpha, g1 = 2L, g2 = 1L, target = "rho",
-  shift_data = TRUE, method = "ils", control = list(terminate_after = 10,
-  max.time = 10, box = 10))
+esreg(...)
+
+\method{esreg}{formula}(formula, data = parent.frame(), alpha, g1 = 2L,
+  g2 = 1L, early_stopping = 10, ...)
+
+\method{esreg}{default}(xq, xe, y, alpha, g1 = 2L, g2 = 1L,
+  early_stopping = 10, ...)
 }
 \arguments{
-\item{formula}{Formula object, e.g.: y ~ x1 + x2 + ...}
+\item{...}{Further arguments (does not apply here)}
 
-\item{data}{data.frame that holds the variables.
-If missing the data is extracted from the environment.}
+\item{formula}{Formula: y ~ x1 + x2 ... | x1 + x2 ...
+where the first part after the response variable specifies the quantile equation
+and the second the expected shortfall part. If only one set of regressors is
+provided it is used for both model specifications.}
+
+\item{data}{data.frame that holds the variables}
 
 \item{alpha}{Probability level}
 
-\item{g1}{1, 2 (see \link{G1_fun}, \link{G1_prime_fun}). Default is 1.}
+\item{g1}{1, 2 (see \link{G1_fun}, \link{G1_prime_fun}), defaults to 1}
 
-\item{g2}{1, 2, 3, 4, 5 (see \link{G2_curly_fun}, \link{G2_fun}, \link{G2_prime_fun}). Default is 2.}
+\item{g2}{1, 2, 3, 4, 5 (see \link{G2_curly_fun}, \link{G2_fun}, \link{G2_prime_fun}). defaults to 2}
 
-\item{target}{The functions to be optimized: either the loss (rho) or the moment function (psi).
-Optimization of the loss function is strongly recommended.}
+\item{early_stopping}{Stop the iterated local search if there is no improvement in early_stopping steps.}
 
-\item{shift_data}{If g2 is 1, 2 or 3, we can either estimate the model without or with
-shifting of the Y variable. We either risk biased estimates (no shifting) or slightly different estimates due
-to the changed loss function (shifting). Defaults to shifting to avoid biased estimates.}
+\item{xq}{Explanatory variables for the quantile regression equation}
 
-\item{method}{Iterated local search (ils) or Simulated annealing (sa).
-Defaults to ils for reasons of computation speed.}
+\item{xe}{Explanatory variables for the expected shortfall regression equation}
 
-\item{control}{A list with control parameters passed to either the ils or sa:
-\itemize{
-  \item terminate_after - Stop the iterated local search if there is no improvement within max_step consecutive steps. Default is 10.
-  \item max.time - Maximum running time of the sa optimizer.
-  \item box - Box around the parameters for the sa optimizer.
-}}
+\item{y}{Response vector}
 }
 \value{
 An esreg object
 }
 \description{
 Estimates a joint linear regression model for the pair (VaR, ES):
-\deqn{Q_\alpha(Y | X) = X'\beta_q}
-\deqn{ES_\alpha(Y | X) = X'\beta_e}
+\deqn{Q_\alpha(Y | Xq) = Xq'\beta_q}
+\deqn{ES_\alpha(Y | Xe) = Xe'\beta_e}
 }
 \examples{
 # Simulate data (DGP-(2) in the linked paper)
 set.seed(0)
-x <- rchisq(2000, df=1)
+x <- rchisq(1000, df=1)
 y <- -x + (1 + 0.5 * x) * rnorm(1000)
 
 # True quantile and expected shortfall regression parameters (for alpha=0.025)
@@ -67,8 +68,8 @@ print("Comparison of the variance-covariance estimators")
 print(rbind(Truth=true_pars,
             Estimate=coef(fit),
             SE_iid_ind=sqrt(diag(cov1)),
-            SE_ind_N=sqrt(diag(cov2)),
-            SE_ind_sp=sqrt(diag(cov3))))
+            SE_nid_N=sqrt(diag(cov2)),
+            SE_nid_sp=sqrt(diag(cov3))))
 
 # Compares estimates using different G2 functions
 fit1 <- esreg(y ~ x, alpha=alpha, g2=1)
@@ -81,16 +82,18 @@ colnames(fits) <- sapply(1:5, function(i) esreg:::.G_function_names(1, i)[2])
 print("Comparison of the five G2 functions")
 print(rbind(Truth=true_pars, t(fits)))
 
-# Compare the M- and Z-estimator
-fit_m <- esreg(y ~ x, alpha=alpha, target="rho")
-fit_z <- esreg(y ~ x, alpha=alpha, target="psi")
-print("Comparison of the M- and Z-estimator")
-print(t(cbind(Truth=true_pars, M=coef(fit_m), Z=coef(fit_z))))
+# Usage of different covariates
+x <- rchisq(1000, df=1)
+noise <- rnorm(1000)
+y <- -x + (1 + 0.5 * x) * rnorm(1000)
+fit <- esreg(y ~ x | x + noise, alpha=0.025)
+print("Using different covariates for VaR and ES")
+print(summary(fit))
+
 }
 \references{
 \href{https://arxiv.org/abs/1704.02213}{A Joint Quantile and Expected Shortfall Regression Framework}
 }
 \seealso{
-\code{\link{vcov.esreg}} for the covariance estimation and
-\code{\link{summary.esreg}} for a summary of the regression results
+\code{\link{vcov.esreg}} for covariance estimation
 }

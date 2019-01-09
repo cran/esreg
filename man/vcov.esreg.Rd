@@ -2,46 +2,17 @@
 % Please edit documentation in R/esreg.R
 \name{vcov.esreg}
 \alias{vcov.esreg}
-\title{Covariance Estimation for esreg}
+\title{Covariance Estimation}
 \usage{
-\method{vcov}{esreg}(object, sparsity = "iid", cond_var = "ind",
-  bandwidth_type = "Hall-Sheather", bootstrap_method = NULL, B = 1000,
-  block_length = NULL, ...)
+\method{vcov}{esreg}(object, method = "asymptotic", ...)
 }
 \arguments{
 \item{object}{An esreg object}
 
-\item{sparsity}{Sparsity estimator (default: iid),
-see \link{density_quantile_function} for more details.
-\itemize{
-  \item iid - Piecewise linear interpolation of the distribution
-  \item nid - Hendricks and Koenker sandwich
-}}
+\item{method}{For asymptotic use \link{vcovA}, for boot use \link{vcovB}}
 
-\item{cond_var}{Conditional truncated variance estimator (default: ind),
-see \link{conditional_truncated_variance} for more details.
-\itemize{
-  \item ind - Variance over all negative residuals
-  \item scl_N - Scaling with the normal distribution
-  \item scl_sp - Scaling with the kernel density function
-}}
-
-\item{bandwidth_type}{Bofinger, Chamberlain or Hall-Sheather}
-
-\item{bootstrap_method}{(default: NULL)
-\itemize{
-  \item NULL - Use the asymptotic estimator
-  \item iid - Apply the iid bootstrap (Efron, 1979)
-  \item stationary - Apply the stationary bootstrap (Politis & Romano, 1994)
-}}
-
-\item{B}{Number of bootstrap iterations}
-
-\item{block_length}{Average block length for the stationary bootstrap}
-
-\item{...}{additional arguments}
+\item{...}{All possible values which can be passed to \link{vcovA} and \link{vcovB}}
 }
 \description{
-Estimate the variance-covariance matrix of the joint (VaR, ES) estimator either
-using the asymptotic formulas or using the bootstrap.
+Estimate the variance-covariance matrix of the joint (VaR, ES) estimator
 }

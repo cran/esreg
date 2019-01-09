@@ -1,4 +1,4 @@
-#' @title Joint Quantile and Expected Shortfall Loss Function
+#' @title Joint Loss Function
 #' @description Computes the joint (VaR, ES) loss
 #' @param r Vector of returns
 #' @param q Vector of quantiles
@@ -17,25 +17,6 @@ esr_loss <- function(r, q, e, alpha, g1 = 2L, g2 = 1L, return_mean = TRUE) {
 
   loss <- ((r <= q) - alpha) * (G1_q - G1_r) +
     G2_e * (e - q + (q - r) * (r <= q)/alpha) - G2_curly_e
-
-  if (return_mean) {
-    mean(loss)
-  } else {
-    loss
-  }
-}
-
-#' @title Generalized Piecewise Linear Loss Function
-#' @description Equivalent to the tick / check loss when g is the identity function.
-#' @param r Vector of returns
-#' @param q Vector of quantiles
-#' @param alpha Probability level
-#' @param g A nondecreasing function
-#' @param return_mean If TRUE returns the average tick loss, else the individual values
-#' @references Gneiting (2011)
-#' @export
-gpl <- function(r, q, alpha, g = function(x) x, return_mean = TRUE) {
-  loss <- (alpha - (r <= q)) * (g(r) - g(q))
 
   if (return_mean) {
     mean(loss)

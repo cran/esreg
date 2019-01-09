@@ -4,22 +4,22 @@
 \alias{esr_rho_lp}
 \title{Joint (VaR, ES) loss for a linear predictor}
 \usage{
-esr_rho_lp(b, y, x, alpha, g1 = 2L, g2 = 1L, delta = 0)
+esr_rho_lp(b, y, xq, xe, alpha, g1 = 2L, g2 = 1L)
 }
 \arguments{
 \item{b}{Parameter vector}
 
 \item{y}{Vector of dependent data}
 
-\item{x}{Matrix of covariates. Note: intercept needs to be added manually}
+\item{xq}{Matrix of covariates for the quantile part}
+
+\item{xe}{Matrix of covariates for the expected shortfall part}
 
 \item{alpha}{Probability level}
 
 \item{g1}{1, 2 (see \link{G1_fun})}
 
 \item{g2}{1, 2, 3, 4, 5 (see \link{G2_curly_fun}, \link{G2_fun})}
-
-\item{delta}{Smooth approximation of the indicator function (0 is the indicator function)}
 }
 \description{
 Returns the loss for the parameter vector b

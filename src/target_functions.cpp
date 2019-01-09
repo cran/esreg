@@ -24,7 +24,6 @@ double G1_fun(double z, int type) {
   return out;
 }
 
-
 //' @title Specification Function
 //' @description G1_prime
 //' @param z Data
@@ -198,103 +197,51 @@ Rcpp::NumericVector G_vec(Rcpp::NumericVector z, Rcpp::String g, int type) {
 //' @description Returns the loss for the parameter vector b
 //' @param b Parameter vector
 //' @param y Vector of dependent data
-//' @param x Matrix of covariates. Note: intercept needs to be added manually
+//' @param xq Matrix of covariates for the quantile part
+//' @param xe Matrix of covariates for the expected shortfall part
 //' @param alpha Probability level
 //' @param g1 1, 2 (see \link{G1_fun})
 //' @param g2 1, 2, 3, 4, 5 (see \link{G2_curly_fun}, \link{G2_fun})
-//' @param delta Smooth approximation of the indicator function (0 is the indicator function)
 //' @importFrom Rcpp sourceCpp
 //' @useDynLib esreg
 //' @keywords internal
 //' @export
 // [[Rcpp::export]]
-double esr_rho_lp(const arma::colvec& b, const arma::colvec& y, const arma::mat& x,
-                  double alpha, int g1=2L, int g2=1L, double delta=0) {
+double esr_rho_lp(const arma::colvec& b, const arma::colvec& y,
+                  const arma::mat& xq, const arma::mat& xe,
+                  double alpha, int g1=2L, int g2=1L) {
 
-  int n = x.n_rows;                           // Number of observations
-  int k = x.n_cols;                           // Number of parameters
-  arma::colvec bq = b.subvec(0, k-1);         // Quantile parameters
-  arma::colvec be = b.subvec(k, 2*k-1);       // Expected shortfall parameters
+  int n = xq.n_rows;                          // Number of observations
+  int kq = xq.n_cols;                         // Number of q-parameters
+  int ke = xe.n_cols;                         // Number of es-parameters
+  arma::colvec bq = b.subvec(0, kq-1);        // Quantile parameters
+  arma::colvec be = b.subvec(kq, kq+ke-1);    // Expected shortfall parameters
 
   // Initialize variables
-  double yi, xq, xe, h, out = 0;
-  arma::mat xi;
+  double yi, xbq, xbe, h, out = 0;
+  arma::mat xqi;
+  arma::mat xei;
 
   // Compute the loss
   for (int i = 0; i < n; i++) {
     yi = y(i);
-    xi = x.row(i).t();
-    xq = as_scalar(xi.t() * bq);
-    xe = as_scalar(xi.t() * be);
+    xqi = xq.row(i).t();
+    xei = xe.row(i).t();
+    xbq = as_scalar(xqi.t() * bq);
+    xbe = as_scalar(xei.t() * be);
 
     // Check the shortfall
-    if (((g2 == 1) | (g2 == 2) | (g2 == 3)) & (xe >= 0)) {
+    if (((g2 == 1) | (g2 == 2) | (g2 == 3)) & (xbe >= -0.01)) {
       Rcpp::warning("x'b_e can not be positive for g2 1, 2, 3!");
       return NA_REAL;
     }
-
-    // Hit variable or an approximation
-    if (delta > 0) {h = 1 / (1 + exp(delta * (yi - xq)));} else {h = yi <= xq;}
 
     // Compute the loss
-    out += (h - alpha) * G1_fun(xq, g1) - h * G1_fun(yi, g1) +
-      G2_fun(xe, g2) * (xe - xq + (xq - yi) * h / alpha) - G2_curly_fun(xe, g2);
+    h = yi <= xbq;  // Hit variable
+    out += (h - alpha) * G1_fun(xbq, g1) - h * G1_fun(yi, g1) +
+      G2_fun(xbe, g2) * (xbe - xbq + (xbq - yi) * h / alpha) -
+      G2_curly_fun(xbe, g2);
   }
+
   return out / n;
-}
-
-
-//' @title Identification (moment) function for the pair (VaR, ES) for a linear predictor
-//' @description Returns the inner product psi' * psi of the moment function
-//' for the parameter vector b
-//' @param b Parameter vector
-//' @param y Vector of dependent data
-//' @param x Matrix of covariates. Note: intercept needs to be added manually
-//' @param alpha Probability level
-//' @param g1 1, 2 (see \link{G1_prime_fun})
-//' @param g2 1, 2, 3, 4, 5 (see \link{G2_fun}, \link{G2_prime_fun})
-//' @param delta Smooth approximation of the indicator function
-//' (the default value 0 is the indicator function)
-//' @importFrom Rcpp sourceCpp
-//' @useDynLib esreg
-//' @keywords internal
-//' @export
-// [[Rcpp::export]]
-double esr_psi_lp(const arma::colvec& b, const arma::colvec& y, const arma::mat& x,
-                  double alpha, int g1=2L, int g2=1, double delta=0) {
-
-  int n = x.n_rows;                           // Number of observations
-  int k = x.n_cols;                           // Number of parameters
-  arma::colvec bq = b.subvec(0, k-1);         // Quantile parameters
-  arma::colvec be = b.subvec(k, 2*k-1);       // Expected shortfall parameters
-
-  // Initialize variables
-  double yi, ui, xq, xe, h, g1p_xq, g2_xe, g2p_xe;
-  arma::mat xi;
-  arma::colvec psi = arma::zeros<arma::colvec>(2*k);
-
-  // Loop over the observations
-  for (int i = 0; i < n; i++) {
-    yi = y(i);
-    xi = x.row(i).t();
-    xq = as_scalar(xi.t() * bq);
-    xe = as_scalar(xi.t() * be);
-
-    // Check the shortfall
-    if (((g2 == 1) | (g2 == 2) | (g2 == 3)) & (xe >= 0)) {
-      Rcpp::warning("x'b_e can not be positive for g2 1, 2, 3!");
-      return NA_REAL;
-    }
-
-    // Hit variable or an approximation
-    if (delta > 0) {h = 1 / (1 + exp(delta * (yi - xq)));} else {h = yi <= xq;}
-
-    // Fill the vector
-    psi.subvec(0, k-1)   += (h - alpha) / alpha * xi * (alpha * G1_prime_fun(xq, g1) + G2_fun(xe, g2));
-    psi.subvec(k, 2*k-1) += xi * G2_prime_fun(xe, g2) * (xe - xq + (xq - yi) * h / alpha);
-  }
-  // Compute the inner product
-  double out = as_scalar(psi.t() * psi) / (n*n);
-
-  return out;
 }

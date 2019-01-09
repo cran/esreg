@@ -113,28 +113,25 @@ conditional_truncated_variance <- function(y, x, approach) {
         lower_int_boundary <- min(df$x)
         pdf <- stats::approxfun(df, yleft = 0, yright = 0)
 
-        # Truncation points and an approximation
+        # Truncation points
         beta <- -mu / sigma
-        b_approx <- seq(min(beta), max(beta), length.out = 100)
 
-        # Integrate the truncated pdf
-        cv_approx <- sapply(b_approx, function(b) {
-          tryCatch({
-            cdfb <- stats::integrate(pdf, lower = lower_int_boundary, upper = b,
-                                     stop.on.error = FALSE, subdivisions = 2000)$value ## Kernel density cdf
-            m1 <- stats::integrate(function(x) x * pdf(x) / cdfb, lower = lower_int_boundary, upper = b,
-                                   stop.on.error = FALSE, subdivisions = 2000)$value
-            m2 <- stats::integrate(function(x) x^2 * pdf(x) / cdfb, lower = lower_int_boundary, upper = b,
-                                   stop.on.error = FALSE, subdivisions = 2000)$value
-            m2 - m1^2
-          }, error=function(e) NA)
-        })
-        # Check the approximation and fill some missings
+        # Integrate the truncated pdf by the trapezoidal rule
+        div <- 1000
+        h <- (max(beta) - lower_int_boundary) / (div - 1)
+        b_approx <- seq(lower_int_boundary, max(beta) + h, h)
+        midpoint <- b_approx[-div] + h/2
+        y0 <- pdf(b_approx)
+        y1 <- b_approx * y0
+        y2 <- b_approx^2 * y0
+        cb <- cumsum(y0[-1] + y0[-div]) / 2 * h
+        m1 <- cumsum(y1[-1] + y1[-div]) / 2 * h
+        m2 <- cumsum(y2[-1] + y2[-div]) / 2 * h
+        cv_approx <- m2 / cb - (m1 / cb)^2
         cv_approx[cv_approx < 0] <- NA
-        cv_approx[b_approx <= lower_int_boundary] <- min(cv_approx, na.rm = TRUE)
 
         # Approximate the conditional truncated variance
-        cv <- sigma^2 * stats::approx(x = b_approx, y = cv_approx, xout = beta)$y
+        cv <- sigma^2 * stats::approx(x = midpoint, y = cv_approx, xout = beta)$y
       }
       if (any(is.na(cv)) | any(!is.finite(cv)) | any(cv < 0)) stop() else cv
     }, error = function(e) {
