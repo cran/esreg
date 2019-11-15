@@ -5,24 +5,24 @@
 #' @param u Quantile residuals
 #' @param alpha Probability level
 #' @param sparsity iid or ind
-#' @param bandwidth_type Bofinger, Chamberlain or Hall-Sheather
+#' @param bandwidth_estimator Bofinger, Chamberlain or Hall-Sheather
 #' @references
 #' For the iid and nid method, see Koenker (1994), and Hendricks and Koenker (1992).
 #' For the bandwidth types, see Bofinger (1975), Chamberlain (1994), and Hall and Sheather(1988).
 #' @keywords internal
 #' @export
-density_quantile_function <- function(y, x, u, alpha, sparsity, bandwidth_type) {
+density_quantile_function <- function(y, x, u, alpha, sparsity, bandwidth_estimator) {
   n <- nrow(x)
   k <- ncol(x)
   eps <- .Machine$double.eps^(2/3)
 
   # Get the bandwidth
-  if (bandwidth_type == "Bofinger") {
+  if (bandwidth_estimator == "Bofinger") {
     bandwidth <- n^(-1/5) * ((9/2 * stats::dnorm(stats::qnorm(alpha))^4)/(2 * stats::qnorm(alpha)^2 + 1)^2)^(1/5)
-  } else if (bandwidth_type == "Chamberlain") {
+  } else if (bandwidth_estimator == "Chamberlain") {
     tau <- 0.05
     bandwidth <- stats::qnorm(1 - alpha/2) * sqrt(tau * (1 - tau)/n)
-  } else if (bandwidth_type == "Hall-Sheather") {
+  } else if (bandwidth_estimator == "Hall-Sheather") {
     tau <- 0.05
     bandwidth <- n^(-1/3) * stats::qnorm(1 - tau/2)^(2/3) * ((3/2 * stats::dnorm(stats::qnorm(alpha))^2)/(2 * stats::qnorm(alpha)^2 + 1))^(1/3)
   } else {
@@ -73,33 +73,10 @@ conditional_truncated_variance <- function(y, x, approach) {
     cv <- rep(stats::var(y[y <= 0]), length(y))
   } else {
     cv <- tryCatch({
-      # Starting values and ensure positive fitted standard deviations
-      fit1 <- stats::lm(y ~ x - 1)
-      fit2 <- stats::lm(abs(fit1$residuals) ~ x - 1)
-      fit2$coefficients[1] <- fit2$coefficients[1] - min(0.001, min(fit2$fitted.values))
-      b0 <- c(fit1$coefficients, fit2$coefficients)
-
-      # Estimate the model under normality
-      ll <- function(par, y, x) {
-        k <- ncol(x)
-        mu <- as.numeric(x %*% par[1:k])
-        sigma <- as.numeric(x %*% par[(k+1):(2*k)])
-        ifelse(all(sigma > 0), -sum(stats::dnorm(x=y, mean=mu, sd=sigma, log=TRUE)), NA)
-      }
-      fit <- try(stats::optim(b0, function(b) ll(par=b, y=y, x=x), method="BFGS"), silent=TRUE)
-      if(inherits(fit, "try-error") || (fit$convergence != 0)) {
-        fit <- try(stats::optim(b0, function(b) ll(par=b, y=y, x=x), method="Nelder-Mead",
-                                control=list(maxit=10000)), silent=TRUE)
-      }
-      if(inherits(fit, "try-error") || (fit$convergence != 0)) {
-        stop("Cannot fit the model!")
-      }
-      b <- fit$par
-
-      # Estimated means and standard deviations
-      k <- ncol(x)
-      mu <- as.numeric(x %*% b[1:k])
-      sigma <- as.numeric(x %*% b[(k+1):(2*k)])
+      # Get conditional mean and sigma
+      mu_sigma <- conditional_mean_sigma(y, x)
+      mu <- mu_sigma$mu
+      sigma <- mu_sigma$sigma
 
       # Truncated conditional variance
       if (approach == "scl_N") {
@@ -141,4 +118,64 @@ conditional_truncated_variance <- function(y, x, approach) {
   }
 
   cv
+}
+
+#' @title Cumulative Density Function at Quantile
+#' @description Returns the cumulative density function evaluated at quantile predictions.
+#' For a correctly specified model this should yield a value close to the quantile level.
+#' @param y Vector of dependent data
+#' @param x Matrix of covariates including the intercept
+#' @param q Vector of quantile predictions
+#' @keywords internal
+#' @export
+cdf_at_quantile <- function(y, x, q) {
+  # Get conditional mean and sigma
+  mu_sigma <- conditional_mean_sigma(y, x)
+  mu <- mu_sigma$mu
+  sigma <- mu_sigma$sigma
+
+  # Empirical CDF of standardized data
+  cdf <- function(x) stats::ecdf((y - mu) / sigma)(x)
+
+  # CDF of standardized quantile predictions
+  z <- (q - mu) / sigma
+  cdf(z)
+}
+
+#' @title Conditional Mean and Sigma
+#' @description Estimate the conditional mean and sigma of the dependent data conditional on covariates x
+#' @param y Vector of dependent data
+#' @param x Matrix of covariates including the intercept
+#' @keywords internal
+#' @export
+conditional_mean_sigma <- function(y, x) {
+  # Starting values and ensure positive fitted standard deviations
+  fit1 <- stats::lm(y ~ x - 1)
+  fit2 <- stats::lm(abs(fit1$residuals) ~ x - 1)
+  fit2$coefficients[1] <- fit2$coefficients[1] - min(0.001, min(fit2$fitted.values))
+  b0 <- c(fit1$coefficients, fit2$coefficients)
+
+  # Estimate the model under normality
+  ll <- function(par, y, x) {
+    k <- ncol(x)
+    mu <- as.numeric(x %*% par[1:k])
+    sigma <- as.numeric(x %*% par[(k+1):(2*k)])
+    ifelse(all(sigma > 0), -sum(stats::dnorm(x=y, mean=mu, sd=sigma, log=TRUE)), NA)
+  }
+  fit <- try(stats::optim(b0, function(b) ll(par=b, y=y, x=x), method="BFGS"), silent=TRUE)
+  if(inherits(fit, "try-error") || (fit$convergence != 0)) {
+    fit <- try(stats::optim(b0, function(b) ll(par=b, y=y, x=x), method="Nelder-Mead",
+                            control=list(maxit=10000)), silent=TRUE)
+  }
+  if(inherits(fit, "try-error") || (fit$convergence != 0)) {
+    stop("Cannot fit the model!")
+  }
+  b <- fit$par
+
+  # Estimated means and standard deviations
+  k <- ncol(x)
+  mu <- as.numeric(x %*% b[1:k])
+  sigma <- as.numeric(x %*% b[(k+1):(2*k)])
+
+  list(mu = mu, sigma = sigma)
 }

@@ -7,7 +7,7 @@
 \method{vcov}{esreg}(object, method = "asymptotic", ...)
 }
 \arguments{
-\item{object}{An esreg object}
+\item{object}{An \link{esreg} object}
 
 \item{method}{For asymptotic use \link{vcovA}, for boot use \link{vcovB}}
 

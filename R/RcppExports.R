@@ -6,6 +6,21 @@ l_esreg_covariance <- function(xq, xe, xbq, xbe, G1_prime_xq, G2_xe, G2_prime_xe
     .Call('_esreg_l_esreg_covariance', PACKAGE = 'esreg', xq, xe, xbq, xbe, G1_prime_xq, G2_xe, G2_prime_xe, density, conditional_variance, alpha)
 }
 
+#' @keywords internal
+lambda_matrix_loop <- function(xq, xe, xbq, xbe, G1_prime_xq, G1_prime_prime_xq, G2_xe, G2_prime_xe, G2_prime_prime_xe, density, cdf, alpha, include_misspecification_terms) {
+    .Call('_esreg_lambda_matrix_loop', PACKAGE = 'esreg', xq, xe, xbq, xbe, G1_prime_xq, G1_prime_prime_xq, G2_xe, G2_prime_xe, G2_prime_prime_xe, density, cdf, alpha, include_misspecification_terms)
+}
+
+#' @keywords internal
+sigma_matrix_loop <- function(xq, xe, xbq, xbe, G1_prime_xq, G2_xe, G2_prime_xe, conditional_variance, cdf, alpha, include_misspecification_terms) {
+    .Call('_esreg_sigma_matrix_loop', PACKAGE = 'esreg', xq, xe, xbq, xbe, G1_prime_xq, G2_xe, G2_prime_xe, conditional_variance, cdf, alpha, include_misspecification_terms)
+}
+
+#' @keywords internal
+estimating_function_loop <- function(y, xq, xe, xbq, xbe, G1_prime_xq, G2_xe, G2_prime_xe, alpha) {
+    .Call('_esreg_estimating_function_loop', PACKAGE = 'esreg', y, xq, xe, xbq, xbe, G1_prime_xq, G2_xe, G2_prime_xe, alpha)
+}
+
 #' @title Specification Function
 #' @description G1
 #' @param z Data
@@ -32,6 +47,20 @@ G1_fun <- function(z, type) {
 #' @export
 G1_prime_fun <- function(z, type) {
     .Call('_esreg_G1_prime_fun', PACKAGE = 'esreg', z, type)
+}
+
+#' @title Specification Function
+#' @description G1_prime_prime
+#' @param z Data
+#' @param type Choice of the G1_prime_prime function:
+#' \itemize{
+#'   \item 1: G1_prime(z) = 0
+#'   \item 2: G1_prime(z) = 0
+#' }
+#' @keywords internal
+#' @export
+G1_prime_prime_fun <- function(z, type) {
+    .Call('_esreg_G1_prime_prime_fun', PACKAGE = 'esreg', z, type)
 }
 
 #' @title Specification Function
@@ -83,6 +112,23 @@ G2_fun <- function(z, type) {
 #' @export
 G2_prime_fun <- function(z, type) {
     .Call('_esreg_G2_prime_fun', PACKAGE = 'esreg', z, type)
+}
+
+#' @title Specification Function
+#' @description G2_prime_prime
+#' @param z Data
+#' @param type Choice of the G2_prime_prime function:
+#' \itemize{
+#'   \item 1: -2/z^3, z < 0
+#'   \item 2: 0.375 / (-z)^(5/2), z < 0
+#'   \item 3: 6/z^4, z < 0
+#'   \item 4: -(exp(z) * (exp(z) - 1)) / (exp(z) + 1)^3
+#'   \item 5: exp(z)
+#' }
+#' @keywords internal
+#' @export
+G2_prime_prime <- function(z, type) {
+    .Call('_esreg_G2_prime_prime', PACKAGE = 'esreg', z, type)
 }
 
 #' @title Vectorized call to the G1 / G2 functions

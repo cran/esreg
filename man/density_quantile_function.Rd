@@ -4,7 +4,7 @@
 \alias{density_quantile_function}
 \title{Density Quantile Function}
 \usage{
-density_quantile_function(y, x, u, alpha, sparsity, bandwidth_type)
+density_quantile_function(y, x, u, alpha, sparsity, bandwidth_estimator)
 }
 \arguments{
 \item{y}{Vector of dependent data}
@@ -17,7 +17,7 @@ density_quantile_function(y, x, u, alpha, sparsity, bandwidth_type)
 
 \item{sparsity}{iid or ind}
 
-\item{bandwidth_type}{Bofinger, Chamberlain or Hall-Sheather}
+\item{bandwidth_estimator}{Bofinger, Chamberlain or Hall-Sheather}
 }
 \description{
 Estimate the density quantile function

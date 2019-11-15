@@ -2,30 +2,35 @@
 % Please edit documentation in R/esreg.R
 \name{vcovA}
 \alias{vcovA}
-\title{AsymptotiC Covariance Estimation}
+\title{Asymptotic Covariance Estimation}
 \usage{
-vcovA(object, sparsity = "iid", cond_var = "ind",
-  bandwidth_type = "Hall-Sheather")
+vcovA(
+  object,
+  sigma_est = "scl_sp",
+  sparsity = "nid",
+  misspec = TRUE,
+  bandwidth_estimator = "Hall-Sheather"
+)
 }
 \arguments{
 \item{object}{An esreg object}
 
-\item{sparsity}{The sparsity estimator,
-see \link{density_quantile_function} for more details.
-\itemize{
-  \item iid - Piecewise linear interpolation of the distribution
-  \item nid - Hendricks and Koenker sandwich
-}}
-
-\item{cond_var}{The conditional truncated variance estimator,
-see \link{conditional_truncated_variance} for more details.
+\item{sigma_est}{The estimator to be used for \eqn{\Sigma}, see \link{conditional_truncated_variance}
 \itemize{
   \item ind - Variance over all negative residuals
   \item scl_N - Scaling with the normal distribution
   \item scl_sp - Scaling with the kernel density function
   }}
 
-\item{bandwidth_type}{The bandwidth estimator
+\item{sparsity}{The estimator to be used for the sparsity in \eqn{\Lambda}, see \link{density_quantile_function}
+\itemize{
+  \item iid - Piecewise linear interpolation of the distribution
+  \item nid - Hendricks and Koenker sandwich
+}}
+
+\item{misspec}{if TRUE, the estimator accounts for potential misspecification in the model}
+
+\item{bandwidth_estimator}{The bandwidth estimator to be used for the iid and nid sparsity estimator, see \link{density_quantile_function}
 \itemize{
   \item Bofinger
   \item Chamberlain
@@ -33,6 +38,8 @@ see \link{conditional_truncated_variance} for more details.
 }}
 }
 \description{
-Estimate the variance-covariance matrix of the joint (VaR, ES) estimator
-using the asymptotic formulas
+Estimate the variance-covariance matrix of the joint (VaR, ES) estimator by the sandwich formula:
+\deqn{\lambda^{-1} \Sigma \lambda^{-1}}
+Several estimators are available for both matrices and the default options are selected to take into account
+possible misspecifications in the underlying data.
 }

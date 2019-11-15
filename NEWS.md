@@ -1,3 +1,7 @@
+# 0.5.0
+* Account for misspecification in the covariance estimator
+* Include information on published paper
+
 # 0.4.0
 * Allow different covariates in the quantile and the expected shortfall regression
 * Restructure the package using the recommendations provided here: http://www.milbo.org/doc/modguide.pdf
