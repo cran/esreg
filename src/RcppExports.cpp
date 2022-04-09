@@ -6,6 +6,11 @@
 
 using namespace Rcpp;
 
+#ifdef RCPP_USE_GLOBAL_ROSTREAM
+Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
+Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
+#endif
+
 // l_esreg_covariance
 arma::mat l_esreg_covariance(arma::mat xq, arma::mat xe, arma::colvec xbq, arma::colvec xbe, arma::colvec G1_prime_xq, arma::colvec G2_xe, arma::colvec G2_prime_xe, arma::colvec density, arma::colvec conditional_variance, double alpha);
 RcppExport SEXP _esreg_l_esreg_covariance(SEXP xqSEXP, SEXP xeSEXP, SEXP xbqSEXP, SEXP xbeSEXP, SEXP G1_prime_xqSEXP, SEXP G2_xeSEXP, SEXP G2_prime_xeSEXP, SEXP densitySEXP, SEXP conditional_varianceSEXP, SEXP alphaSEXP) {

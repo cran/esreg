@@ -46,4 +46,4 @@ References
 ----------
 
 [A Joint Quantile and Expected Shortfall Regression
-Framework](https://arxiv.org/abs/1704.02213)
+Framework](https://projecteuclid.org/euclid.ejs/1559872834)

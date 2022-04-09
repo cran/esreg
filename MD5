@@ -1,12 +1,12 @@
-15ea382bc312fba4aa80dba82e989c6b *DESCRIPTION
+b6667183c6f8e70760e437aaf51dd317 *DESCRIPTION
 19e4ca420a587fe00a4062bfeafcad77 *NAMESPACE
-5930b292003c4661955c6e55b4a0efcb *NEWS.md
+a9a2deeb80e3297a1ba26186bd895360 *NEWS.md
 eba0f36ec9b4fd835ecdca005eb0ce2b *R/RcppExports.R
 c5540f62c32d6f93fce7afa2483e1da6 *R/esreg.R
 8f0682dff3375459a2c6796a8e6a7cd3 *R/helper_functions.R
 0cf05572c45158339de02ea1481489f5 *R/loss_functions.R
-56df72dadea5828499af2acc4bd79191 *R/nuisance_quantities.R
-a3636d7540d304b6ecf0745c4a92a748 *README.md
+0acf0c7058c02fad54ff6d368a4a13e3 *R/nuisance_quantities.R
+c472ac11213eaa15b3d736dc18f9a275 *README.md
 b76ff4604a45685a4131fe4439d2077a *man/G1_fun.Rd
 a01a92cccc5564bee29f7e68554772d6 *man/G1_prime_fun.Rd
 f11b241fd5fe8280c84eafb87b65fc60 *man/G1_prime_prime_fun.Rd
@@ -30,7 +30,7 @@ b4055d4f944808c2f027a558e1b3b234 *man/vcovA.Rd
 075b99d0515fd127e2155ee13c1ed54f *man/vcovB.Rd
 2a6f9e9e044a78154d3cfda5936d6f48 *src/Makevars
 2a6f9e9e044a78154d3cfda5936d6f48 *src/Makevars.win
-fa1b3240a2f2fb1cb87f3e363a589fe5 *src/RcppExports.cpp
+df3b80ea60b9dd21b6446f1efbdf8d92 *src/RcppExports.cpp
 f7665cc66f5791c98187b4a48908aafc *src/covariance_functions.cpp
 2efce33bffcff0f7d3f884931f2a595d *src/sandwich_loops.cpp
 51be85e01fa025023413735f173d098e *src/target_functions.cpp

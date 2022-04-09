@@ -168,10 +168,12 @@ conditional_mean_sigma <- function(y, x) {
                             control=list(maxit=10000)), silent=TRUE)
   }
   if(inherits(fit, "try-error") || (fit$convergence != 0)) {
-    stop("Cannot fit the model!")
+    warning("Conditional variance estimation: cannot optimize model, returning starting values instead")
+    b <- b0
+  } else {
+    b <- fit$par  
   }
-  b <- fit$par
-
+  
   # Estimated means and standard deviations
   k <- ncol(x)
   mu <- as.numeric(x %*% b[1:k])

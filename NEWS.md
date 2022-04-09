@@ -1,3 +1,8 @@
+# 0.6.0
+* Estimation of model parameters in eq. (28): return starting values if 
+  the numerical optimization algorithms do not terminate successfully instead of
+  raising an error.
+
 # 0.5.0
 * Account for misspecification in the covariance estimator
 * Include information on published paper

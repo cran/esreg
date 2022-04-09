@@ -1,8 +1,8 @@
 Package: esreg
 Type: Package
 Title: Joint Quantile and Expected Shortfall Regression
-Version: 0.5.0
-Date: 2019-11-14
+Version: 0.6.0
+Date: 2022-04-09
 Authors@R: c(person('Sebastian', 'Bayer', email='sebastian.bayer@uni-konstanz.de', role=c('aut', 'cre')), 
              person('Timo', 'Dimitriadis', email='timo.dimitriadis@uni-konstanz.de', role='aut'))
 Description: 
@@ -10,14 +10,13 @@ Description:
     a set of covariates, see Dimitriadis and Bayer (2019) <doi:10.1214/19-EJS1560>.
 License: GPL-3
 Encoding: UTF-8
-LazyData: true
 Imports: quantreg, Rcpp, stats, Formula
 LinkingTo: Rcpp, RcppArmadillo
 RoxygenNote: 7.0.0
 NeedsCompilation: yes
-Packaged: 2019-11-15 20:28:51 UTC; sebastian
+Packaged: 2022-04-09 22:00:13 UTC; sebastian
 Author: Sebastian Bayer [aut, cre],
   Timo Dimitriadis [aut]
 Maintainer: Sebastian Bayer <sebastian.bayer@uni-konstanz.de>
 Repository: CRAN
-Date/Publication: 2019-11-15 20:50:02 UTC
+Date/Publication: 2022-04-09 23:32:40 UTC
