@@ -18,20 +18,16 @@ arma::mat lambda_matrix_loop(
   arma::mat lambda_12 = arma::zeros<arma::mat>(kq, ke);
   arma::mat lambda_22 = arma::zeros<arma::mat>(ke, ke);
   arma::mat lambda = arma::zeros<arma::mat>(kq+ke, kq+ke);
-  arma::mat xqi, xei, xxq, xxe, xxqe;
-  double yi, xbqi, xbei, hit, cdfi;
 
   // Compute the matrix elements
   for (int i = 0; i < n; i++) {
-    xqi = xq.row(i);
-    xei = xe.row(i);
-    xxq = xqi.t() * xqi;
-    xxe = xei.t() * xei;
-    xxqe = xqi.t() * xei;
-    xbqi = xbq(i);
-    xbei = xbe(i);
-    hit = yi <= xbqi;
-    cdfi = cdf(i);
+    arma::mat xqi = xq.row(i);
+    arma::mat xei = xe.row(i);
+    arma::mat xxq = xqi.t() * xqi;
+    arma::mat xxe = xei.t() * xei;
+    arma::mat xxqe = xqi.t() * xei;
+    double xbqi = xbq(i);
+    double cdfi = cdf(i);
 
     if (include_misspecification_terms) {
       lambda_11 += xxq * (G1_prime_xq(i) + G2_xe(i) / alpha) * density(i) + xxq * G1_prime_prime_xq(i) * (cdfi - alpha);
@@ -68,23 +64,21 @@ arma::mat sigma_matrix_loop(
   arma::mat sigma_12 = arma::zeros<arma::mat>(ke, kq);
   arma::mat sigma_22 = arma::zeros<arma::mat>(ke, ke);
   arma::mat sigma = arma::zeros<arma::mat>(kq+ke, kq+ke);
-  arma::mat xqi, xei, xxq, xxe, xxeq, _sigma_11, _sigma_12, _sigma_22;
-  double xbqi, xbei, cdfi;
 
   // Compute the matrix elements
   for (int i = 0; i < n; i++) {
-    xqi = xq.row(i);
-    xei = xe.row(i);
-    xxq = xqi.t() * xqi;
-    xxe = xei.t() * xei;
-    xxeq = xei.t() * xqi;
-    xbqi = xbq(i);
-    xbei = xbe(i);
-    cdfi = cdf(i);
+    arma::mat xqi = xq.row(i);
+    arma::mat xei = xe.row(i);
+    arma::mat xxq = xqi.t() * xqi;
+    arma::mat xxe = xei.t() * xei;
+    arma::mat xxeq = xei.t() * xqi;
+    double xbqi = xbq(i);
+    double xbei = xbe(i);
+    double cdfi = cdf(i);
 
-    _sigma_11 = xxq * pow(alpha*G1_prime_xq(i) + G2_xe(i), 2);
-    _sigma_12 = xxeq * (alpha*G1_prime_xq(i) + G2_xe(i)) * G2_prime_xe(i);
-    _sigma_22 = xxe * pow(G2_prime_xe(i), 2);
+    arma::mat _sigma_11 = xxq * pow(alpha*G1_prime_xq(i) + G2_xe(i), 2);
+    arma::mat _sigma_12 = xxeq * (alpha*G1_prime_xq(i) + G2_xe(i)) * G2_prime_xe(i);
+    arma::mat _sigma_22 = xxe * pow(G2_prime_xe(i), 2);
 
     if (include_misspecification_terms) {
       sigma_11 +=
@@ -126,23 +120,21 @@ arma::mat estimating_function_loop(
   int kq = xq.n_cols;
   int ke = xe.n_cols;
 
-  // Initialize variables
+  // Define some 0-matrices
   arma::mat psi = arma::zeros<arma::mat>(n, kq + ke);
-  double yi, xbqi, xbei, hit;
-  arma::mat xqi, xei, xxq, xxe;
 
   // Compute the matrix elements
   for (int i = 0; i < n; i++) {
-    yi = y(i);
-    xqi = xq.row(i);
-    xei = xe.row(i);
-    xxq = xqi.t() * xqi;
-    xxe = xei.t() * xei;
-    xbqi = xbq(i);
-    xbei = xbe(i);
+    double yi = y(i);
+    arma::mat xqi = xq.row(i);
+    arma::mat xei = xe.row(i);
+    arma::mat xxq = xqi.t() * xqi;
+    arma::mat xxe = xei.t() * xei;
+    double xbqi = xbq(i);
+    double xbei = xbe(i);
 
     // Hit variable
-    hit = yi <= xbqi;
+    bool hit = yi <= xbqi;
 
     // Fill the matrix
     psi.submat(i, 0, i, kq-1) = xqi * (G1_prime_xq(i) + G2_xe(i)/alpha) * (hit - alpha);

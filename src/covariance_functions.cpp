@@ -23,15 +23,13 @@ arma::mat l_esreg_covariance(
     arma::mat lambda = arma::zeros<arma::mat>(kq+ke, kq+ke);
     arma::mat C = arma::zeros<arma::mat>(kq+ke, kq+ke);
 
-    arma::mat xqi, xei, xxq, xxe, xxeq;
-
     // Compute the matrix elements
     for (int i = 0; i < n; i++) {
-      xqi = xq.row(i);
-      xei = xe.row(i);
-      xxq = xqi.t() * xqi;
-      xxe = xei.t() * xei;
-      xxeq = xei.t() * xqi;
+      arma::mat xqi = xq.row(i);
+      arma::mat xei = xe.row(i);
+      arma::mat xxq = xqi.t() * xqi;
+      arma::mat xxe = xei.t() * xei;
+      arma::mat xxeq = xei.t() * xqi;
 
       lambda_11 += 1/alpha * xxq * density(i) * (alpha*G1_prime_xq(i) + G2_xe(i));
       lambda_22 += xxe * G2_prime_xe(i);

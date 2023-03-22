@@ -1,6 +1,6 @@
-b6667183c6f8e70760e437aaf51dd317 *DESCRIPTION
+5ff548c8abced7b54314d11dc1d65727 *DESCRIPTION
 19e4ca420a587fe00a4062bfeafcad77 *NAMESPACE
-a9a2deeb80e3297a1ba26186bd895360 *NEWS.md
+3bddecd413a37ccd885c788f564a895f *NEWS.md
 eba0f36ec9b4fd835ecdca005eb0ce2b *R/RcppExports.R
 c5540f62c32d6f93fce7afa2483e1da6 *R/esreg.R
 8f0682dff3375459a2c6796a8e6a7cd3 *R/helper_functions.R
@@ -31,6 +31,6 @@ b4055d4f944808c2f027a558e1b3b234 *man/vcovA.Rd
 2a6f9e9e044a78154d3cfda5936d6f48 *src/Makevars
 2a6f9e9e044a78154d3cfda5936d6f48 *src/Makevars.win
 df3b80ea60b9dd21b6446f1efbdf8d92 *src/RcppExports.cpp
-f7665cc66f5791c98187b4a48908aafc *src/covariance_functions.cpp
-2efce33bffcff0f7d3f884931f2a595d *src/sandwich_loops.cpp
-51be85e01fa025023413735f173d098e *src/target_functions.cpp
+c76a349cc6b8018a8c3b9bb26a044e29 *src/covariance_functions.cpp
+2f3f420264047fd3d883c3e56061d6eb *src/sandwich_loops.cpp
+04179d1c4046b8c3427f1b38d962f4d0 *src/target_functions.cpp

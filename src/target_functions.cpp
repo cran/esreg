@@ -286,17 +286,15 @@ double esr_rho_lp(const arma::colvec& b, const arma::colvec& y,
   arma::colvec be = b.subvec(kq, kq+ke-1);    // Expected shortfall parameters
 
   // Initialize variables
-  double yi, xbq, xbe, h, out = 0;
-  arma::mat xqi;
-  arma::mat xei;
+  double out = 0;
 
   // Compute the loss
   for (int i = 0; i < n; i++) {
-    yi = y(i);
-    xqi = xq.row(i).t();
-    xei = xe.row(i).t();
-    xbq = as_scalar(xqi.t() * bq);
-    xbe = as_scalar(xei.t() * be);
+    double yi = y(i);
+    arma::mat xqi = xq.row(i).t();
+    arma::mat xei = xe.row(i).t();
+    double xbq = as_scalar(xqi.t() * bq);
+    double xbe = as_scalar(xei.t() * be);
 
     // Check the shortfall
     if (((g2 == 1) | (g2 == 2) | (g2 == 3)) & (xbe >= -0.01)) {
@@ -305,7 +303,7 @@ double esr_rho_lp(const arma::colvec& b, const arma::colvec& y,
     }
 
     // Compute the loss
-    h = yi <= xbq;  // Hit variable
+    bool h = yi <= xbq;  // Hit variable
     out += (h - alpha) * G1_fun(xbq, g1) - h * G1_fun(yi, g1) +
       G2_fun(xbe, g2) * (xbe - xbq + (xbq - yi) * h / alpha) -
       G2_curly_fun(xbe, g2);
