@@ -1,19 +1,22 @@
+# 0.6.2
+- Fix bug in loss function "esr_loss".
+
 # 0.6.1
-* Resolve compiler warnings.
+- Resolve compiler warnings.
 
 # 0.6.0
-* Estimation of model parameters in eq. (28): return starting values if 
+- Estimation of model parameters in eq. (28): return starting values if 
   the numerical optimization algorithms do not terminate successfully instead of
   raising an error.
 
 # 0.5.0
-* Account for misspecification in the covariance estimator
-* Include information on published paper
+- Account for misspecification in the covariance estimator
+- Include information on published paper
 
 # 0.4.0
-* Allow different covariates in the quantile and the expected shortfall regression
-* Restructure the package using the recommendations provided here: http://www.milbo.org/doc/modguide.pdf
-* Remove unused pieces of code and simplify handling
+- Allow different covariates in the quantile and the expected shortfall regression
+- Restructure the package using the recommendations provided here: http://www.milbo.org/doc/modguide.pdf
+- Remove unused pieces of code and simplify handling
 
 # 0.3.2
 Improved speed of the semi-parametric covariance estimator

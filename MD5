@@ -1,10 +1,10 @@
-5ff548c8abced7b54314d11dc1d65727 *DESCRIPTION
-19e4ca420a587fe00a4062bfeafcad77 *NAMESPACE
-3bddecd413a37ccd885c788f564a895f *NEWS.md
+98fbb06f99c48f500a68c5a40f8c5de4 *DESCRIPTION
+99df07f86ee23fb0ad19a8581192df03 *NAMESPACE
+2c51b91840327372cf92a17348f69acb *NEWS.md
 eba0f36ec9b4fd835ecdca005eb0ce2b *R/RcppExports.R
-c5540f62c32d6f93fce7afa2483e1da6 *R/esreg.R
+9b9eff3684bed2e575bd5d600e85efcf *R/esreg.R
 8f0682dff3375459a2c6796a8e6a7cd3 *R/helper_functions.R
-0cf05572c45158339de02ea1481489f5 *R/loss_functions.R
+047aa841a0d67a066842134048b49ec5 *R/loss_functions.R
 0acf0c7058c02fad54ff6d368a4a13e3 *R/nuisance_quantities.R
 c472ac11213eaa15b3d736dc18f9a275 *README.md
 b76ff4604a45685a4131fe4439d2077a *man/G1_fun.Rd

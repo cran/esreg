@@ -355,7 +355,8 @@ vcovB <-function(object, bootstrap_method='iid', B=1000) {
   cov
 }
 
-esreg.fit <- function(xq, xe, y, alpha, g1, g2, early_stopping) {
+#' @export
+esreg.fit <- function(xq, xe, y, alpha, g1, g2, early_stopping, ...) {
   t0 <- Sys.time()
 
   # Check input parameters and data

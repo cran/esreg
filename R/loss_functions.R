@@ -15,7 +15,7 @@ esr_loss <- function(r, q, e, alpha, g1 = 2L, g2 = 1L, return_mean = TRUE) {
   G2_curly_e <- G_vec(z = e, g = "G2_curly", type = g2)
   G2_e <- G_vec(z = e, g = "G2", type = g2)
 
-  loss <- ((r <= q) - alpha) * (G1_q - G1_r) +
+  loss <- ((r <= q) - alpha) * G1_q - (r <= q) * G1_r +
     G2_e * (e - q + (q - r) * (r <= q)/alpha) - G2_curly_e
 
   if (return_mean) {
