@@ -1,3 +1,6 @@
+# esreg 0.6.3
+- Fix the second derivative of G2 for type 1.
+
 # 0.6.2
 - Fix bug in loss function "esr_loss".
 

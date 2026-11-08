@@ -212,7 +212,7 @@ double G2_prime_prime(double z, int type) {
     }
   }
   if (type == 1) {
-    out = -1/pow(z, 3);
+    out = -2/pow(z, 3);
   } else if (type == 2) {
     out = 0.375/pow(-z, 2.5);
   } else if (type == 3) {
